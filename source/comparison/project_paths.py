@@ -2,15 +2,23 @@
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[2]
 CODE = PROJECT / 'source/comparison'
 CONFIGS = PROJECT / 'source/config'
 RUNS = PROJECT / 'log/八模型对比/runs'
-PATHS = json.loads((CONFIGS / 'paths.json').read_text())
-CACHE = Path(PATHS['cache_root'])
-SNAPSHOTS = json.loads((PROJECT / 'references/实验来源/source_snapshots.json').read_text())
+if os.environ.get('A1_REPRO_CACHE'):
+    PATHS = {'materials_root': str(PROJECT / 'references/code'),
+             'model_sources': {name: str(PROJECT / 'references/code' / name)
+                               for name in ('FasterViT', 'MambaVision', 'TinyViM')}}
+    CACHE = Path(os.environ['A1_REPRO_CACHE']).resolve()
+    SNAPSHOTS = {}
+else:
+    PATHS = json.loads((CONFIGS / 'paths.json').read_text())
+    CACHE = Path(PATHS['cache_root'])
+    SNAPSHOTS = json.loads((PROJECT / 'references/实验来源/source_snapshots.json').read_text())
 
 
 def original_source(path):

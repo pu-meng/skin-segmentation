@@ -1,6 +1,6 @@
 import sys,io
 from pathlib import Path
-ROOT=Path('/home/PuMengYu/experiments/skin_segmentation')
+ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT),str(ROOT/'source/comparison'),str(ROOT/'source/bottleneck_mamba')]
 import torch
 from torch import nn

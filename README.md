@@ -1,3 +1,7 @@
+# A1-SwiftFormer 复现
+
+当前主要模型的代码入口和复现状态见 [A1-SwiftFormer 复现说明](reproducibility/a1_swiftformer/README.md)。以下为历史项目说明，其中“当前主模型”等文字反映当时状态。
+
 # 皮肤病灶分割
 
 **各版本修改图：[原始Mamba、V1、V2、V3的结构图与逐元素说明](研究记录/原始Mamba与三个版本_结构图与逐元素运算.md)。**

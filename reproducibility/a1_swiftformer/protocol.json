@@ -1,0 +1,157 @@
+{
+  "data": {
+    "dataset": "HAM10000",
+    "split_audit_sha256": "3938e17f86565412ab63aef1ebdcafc47494c180374a06e211886bef8fe75e4a",
+    "counts": {
+      "train": 6983,
+      "val": 1010,
+      "test": 2020
+    },
+    "total_active_images": 10013,
+    "excluded_count": 2,
+    "exclusion_artifact_hashes": {
+      "excluded_images.csv": "60ef440a0432a7f593f885495a96ebd81f053c4cbe3b8b3dd55e3d7f7423785d",
+      "exclusion_policy.json": "bf15977c22cd03b3ecd6589a66df5f54ac06bddf8d06b70eed2e324f384f2ac3"
+    },
+    "cache_files": {
+      "images.npy": {
+        "bytes": 1969029248,
+        "sha256": "0d89ea91e3870c3946812d819ee53e40854299ebec963050d9afe2a4f3d2529e",
+        "shape": [
+          10015,
+          256,
+          256,
+          3
+        ],
+        "dtype": "uint8"
+      },
+      "masks.npy": {
+        "bytes": 656343168,
+        "sha256": "11c586253a547b7c935c8887a95446214854718531553b367b8052314178d8a2",
+        "shape": [
+          10015,
+          256,
+          256
+        ],
+        "dtype": "uint8"
+      }
+    },
+    "group_keys": [
+      "lesion_id",
+      "dedup_group_id"
+    ],
+    "known_group_crossings": 0,
+    "unknown_overlap_exhaustively_excluded": false,
+    "original_split_sha256": "0f5e2df296f50afb74002ce94438a5b7a17782deaef671f93673a60a8e8b5ed8",
+    "split_sha256": "929260a60bebbcd8575c83fe6e8f60ca5db75cf8d4ca7f1555da249be7b7ac77"
+  },
+  "training": {
+    "seed": 42,
+    "repeats_per_model": 1,
+    "epochs": 300,
+    "batch_size": 8,
+    "updates_per_epoch": 873,
+    "last_batch_size": 7,
+    "total_optimizer_updates": 261900,
+    "image_exposures": 2094900,
+    "gradient_accumulation": 1,
+    "drop_last": false,
+    "sampling": "one shuffled pass without replacement per epoch; same dedicated sampler stream as old seed42 baseline",
+    "num_workers": 0,
+    "class_balancing": false,
+    "early_stopping": false,
+    "optimizer": "AdamW",
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "scheduler": "CosineAnnealingLR",
+    "T_max_epochs": 50,
+    "eta_min": 1e-05,
+    "scheduler_step_unit": "epoch",
+    "loss": "official BceDiceLoss(wb=1,wd=1,smooth=1)",
+    "amp": false,
+    "input_size": [
+      256,
+      256
+    ],
+    "validation_batch_size": 1,
+    "validation_frequency_epochs": 1,
+    "fresh_start": true,
+    "automatic_resume": false
+  },
+  "preprocessing": {
+    "image_resize": "PIL RGB bilinear",
+    "mask_resize": "PIL L bilinear then >0",
+    "external_normalization": "RGB /255",
+    "augmentation": {
+      "rot90_flip_probability": 0.5,
+      "rot90_k": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "flip_axis": [
+        0,
+        1
+      ],
+      "rotation_probability": 0.5,
+      "rotation_angle_integer_degrees": [
+        20,
+        79
+      ],
+      "interpolation_order": 0,
+      "reshape": false,
+      "shared_image_mask_transform": true
+    },
+    "validation_and_test_augmentation": false,
+    "tta": false
+  },
+  "evaluation": {
+    "checkpoint_selection": "minimum mean validation BCE+Dice loss",
+    "backbone_selection": "maximum validation global Dice at validation-loss-selected checkpoint; exact ties: fewer parameters, then lower validation loss",
+    "threshold": 0.5,
+    "tta": false,
+    "primary_metrics": [
+      "global Dice",
+      "global IoU"
+    ],
+    "secondary_metrics": [
+      "per-image mean Dice",
+      "per-image mean IoU",
+      "HD95 pixels",
+      "parameters"
+    ],
+    "hd95": {
+      "date": "2026-10-21",
+      "user_confirmed": true,
+      "grid": [
+        256,
+        256
+      ],
+      "spacing": [
+        1,
+        1
+      ],
+      "unit": "pixels",
+      "prediction_threshold": 0.5,
+      "boundary_connectivity": 1,
+      "directional_aggregation": "pooled_bidirectional_nearest_surface_distances",
+      "percentile": 95,
+      "percentile_method": "linear",
+      "both_empty": 0,
+      "one_empty": "sqrt(H^2+W^2)",
+      "per_run_aggregation": "arithmetic mean over all images including empty predictions",
+      "five_run_aggregation": "mean and sample SD ddof1 over five per-run means",
+      "empty_prediction_counts_reported": true,
+      "claim_author_exact_implementation": false
+    },
+    "test_evaluation": "fixed validation best after300; test2020 none and mirror4; no test selection",
+    "test_used_for_design": false,
+    "single_seed_limits": "No multi-run standard deviation or statistical superiority claim"
+  }
+}

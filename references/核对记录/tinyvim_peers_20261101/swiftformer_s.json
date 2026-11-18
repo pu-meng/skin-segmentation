@@ -1,0 +1,13 @@
+{
+  "name": "swiftformer_s",
+  "repo": "https://github.com/Amshaker/SwiftFormer",
+  "commit": "4aa6cd67527baae00390b58134fa8954e06c5431",
+  "weights_url": "https://drive.google.com/file/d/1awpcXAaHH38WaHrOmUM8updxQazUZ3Nb/view",
+  "bytes": 24524305,
+  "sha256": "f8f93ffd5fd53e9086806f31b2c1577cba4b6eb2eb66ff20a7444e294ae5a4b5",
+  "checkpoint_top_keys": [
+    "model"
+  ],
+  "download_date": "2026-11-01",
+  "official_config": "official classifier; head removed only after strict loading"
+}
