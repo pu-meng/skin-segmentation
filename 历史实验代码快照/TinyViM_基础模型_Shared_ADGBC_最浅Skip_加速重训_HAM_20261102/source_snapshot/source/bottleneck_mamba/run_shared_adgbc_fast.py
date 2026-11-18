@@ -1,0 +1,41 @@
+"""Explicit launch command; reuses matching preflight, then fresh train -> test."""
+from pathlib import Path
+import argparse,fcntl,hashlib,json,os,subprocess,sys
+ROOT=Path(__file__).resolve().parents[2]
+RUN=ROOT/'log/TinyViM_基础模型_Shared_ADGBC_最浅Skip_加速重训_HAM_20261102'
+ARM='tinyvim_base_shared_adgbc_s0_fast'
+ENTRY=Path(__file__).parent/'experiment_shared_adgbc_fast.py'
+
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--gpu',type=int,default=0)
+    args=parser.parse_args()
+    RUN.mkdir(exist_ok=True)
+    with (RUN/'controller.lock').open('a') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        assert not any((RUN/'run'/n).exists() for n in ('status.json','checkpoints','history.csv')),'Refusing overwrite'
+        memory=subprocess.check_output(['nvidia-smi','-i',str(args.gpu),'--query-gpu=memory.free','--format=csv,noheader,nounits'],text=True)
+        assert int(memory.strip())>=6500,'Need 6500 MiB free GPU memory for accelerated Shared AD-GBC'
+        env=os.environ.copy();env.update(CUDA_VISIBLE_DEVICES=str(args.gpu),EXPERIMENT_PHYSICAL_GPU=str(args.gpu),PYTHONUNBUFFERED='1')
+        passed=RUN/'preflight/preflight_status.json'
+        # Do not overlap formal replacement training with the retired original.
+        old=ROOT/'log/TinyViM_基础模型_Shared_ADGBC_最浅Skip_HAM_20261102'
+        state=json.loads((old/'run/status.json').read_text())
+        original_pid=state['pid']
+        cmd=Path(f'/proc/{original_pid}/cmdline')
+        assert not cmd.exists() or b'experiment_shared_adgbc.py' not in cmd.read_bytes(), 'Original trainer must stop before fresh restart'
+        assert state['status'] in ('stopped_at_epoch_boundary','stopped_for_accelerated_restart')
+        modes=['train','test']
+        if not passed.exists():modes.insert(0,'preflight')
+        else:
+            report=json.loads(passed.read_text());p=RUN/'protocol.json'
+            assert report['status']=='passed' and report['protocol_sha256']==hashlib.sha256(p.read_bytes()).hexdigest()
+        for mode in modes:
+            command=[sys.executable,'-u',str(ENTRY),'--arm',ARM,'--mode',mode,'--run-root',str(RUN),'--gpu','0']
+            if mode=='test':command=[sys.executable,'-u',str(Path(__file__).parent/'final_test_shared_adgbc_fast.py'),'--arm',ARM,'--gpu','0']
+            with (RUN/(mode+'_console.log')).open('x') as stream:
+                subprocess.run(command,cwd=ROOT,env=env,stdout=stream,stderr=subprocess.STDOUT,check=True)
+
+
+if __name__=='__main__':main()

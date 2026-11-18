@@ -1,0 +1,8 @@
+torch
+torchvision
+tqdm
+termcolor
+ptflops
+pyyaml
+numpy
+deepspeed

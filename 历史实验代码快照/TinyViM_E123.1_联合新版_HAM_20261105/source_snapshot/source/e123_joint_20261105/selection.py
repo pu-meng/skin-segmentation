@@ -1,0 +1,4 @@
+from candidate import ROOT,build_candidate
+ARM='E123.1'
+RUN=ROOT/'log/TinyViM_E123.1_联合新版_HAM_20261105'
+CHOICES={'placement': 'E2 Align3 -> E1 original D-WPO D3 -> original D2/D1 -> dual-source E3 before D0 concat', 'switches': {'E1': True, 'latest_E2': True, 'latest_E3': True}, 'E1': 'original DStage, not E1.1/E1.2; independently seed42', 'E2': 'chapter2 of module design, rho_G/L sigmoid initial .1; gamma .01; two width64 state16 rank4 scans, direction average', 'E2_FFN': 'first implementation choice: retain TinyViM FFN256->1024->256 with ConvBN GELU ConvBN, drop0; separate preNorm', 'E3': 'chapter3 dual independent sides; full lap/Haar/FFT + rep/axial/coarse; simultaneous cross gains; gamma .01', 'E3_border': 'all E3 DW including pre/post reflect per chapter3 uniform convention', 'superseded_scope': 'standalone E2 training invalidated before deployment', 'GPU': 'physical GPU1 shared authorized; preserve all existing tasks'}

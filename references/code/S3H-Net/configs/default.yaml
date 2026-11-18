@@ -1,0 +1,97 @@
+experiment_name: "exp"
+seed: 3407
+
+data:
+  task: "binary"        # "binary" | "multiclass"
+  num_classes: 1
+  activate_dataset: "CVC-ClinicDB"
+  datasets:
+     - name: "CVC-ClinicDB"
+       root: "datasets/CVC-ClinicDB"
+     - name: "ETIS-LaribPolypDB"
+       root: "datasets/ETIS-LaribPolypDB"
+     - name: "ISIC18"
+       root: "datasets/ISIC18"
+     - name: "USG"
+       root: "datasets/USG"
+     - name: "DSB18"
+       root: "datasets/DSB18"
+     - name: "PROMISE"
+       root: "datasets/PROMISE"
+       split_json: "./configs/PROMISE_split.json"
+  image_dirname: "images"
+  mask_dirname: "masks"
+
+  # Input Process
+  input_size: [256, 256]  # e.g. [256, 256] or null
+  image_channels: 3
+  mask_threshold: 0.5
+
+  # Data Enhancement
+  augment:
+    hflip: true
+    vflip: true
+    rot90: true
+
+  # DataLoader
+  batch_size: 8
+  num_workers: 4
+  pin_memory: true
+
+  # split ratio: 8:1:1
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+
+model:
+  active_model: "S3H-Net"
+  models:
+    - name: "unet_small"
+      kwargs:
+        in_channels: 3
+        out_channels: 8
+        base_channels: 32
+    - name: "S3H-Net"
+      kwargs:
+        num_classes: 1
+        backbone_pretrained: true
+        cnn_backbone: "efficientnetv2"   #  "res2net" | "efficientnetv2" | "resnet"
+        n_spixels: 512
+        feat_dims: 32
+        K_sem: 16
+        deep_supervision: true
+        compactness: 0.17
+        lambda_b: 0.5
+
+optim:
+  lr: 0.0005
+  weight_decay: 0.0001
+  scheduler: "cosine"  # "poly" | "cosine" | "plateau"
+  min_lr: 1e-6
+
+loss:
+  lambda_dice: 1.0
+  lambda_ce: 1.0
+
+metrics:
+  threshold: 0.5
+
+trainer:
+  accelerator: "gpu"
+  devices: "auto"
+  precision: "32-true"
+  max_epochs: 200
+  log_every_n_steps: 20
+  enable_checkpointing: true
+  deterministic: true
+  check_val_every_n_epoch: 1
+  early_stopping:
+    monitor: "val/loss"
+    patience: 40
+    mode: "min"
+    min_delta: 1e-4
+
+logging:
+  save_dir: "runs"
+  topk: 4

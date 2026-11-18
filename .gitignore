@@ -1,0 +1,17 @@
+data/
+dataset/
+datasets/
+log/
+logs/
+__pycache__/
+*.py[cod]
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.npy
+*.npz
+*.nii
+*.nii.gz
+*.csv
+.env
