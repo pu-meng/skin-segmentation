@@ -1,5 +1,7 @@
 # A1-SwiftFormer 复现
 
+给 ChatGPT、DeepSeek 等 AI 的操作指南见 [AI 复现指南](AI_REPRODUCE.md)。
+
 当前主要模型的代码入口和复现状态见 [A1-SwiftFormer 复现说明](reproducibility/a1_swiftformer/README.md)。以下为历史项目说明，其中“当前主模型”等文字反映当时状态。
 
 # 皮肤病灶分割
