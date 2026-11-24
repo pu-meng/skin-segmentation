@@ -1,1 +1,0 @@
-bash ./dist_train.sh configs/mask_rcnn_tinyvim_b_fpn_1x_coco.py 8

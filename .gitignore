@@ -15,3 +15,13 @@ __pycache__/
 *.nii.gz
 *.csv
 .env
+
+# Share fixed public image IDs needed for reproducibility.
+!reproducibility/a1_swiftformer/splits/*.csv
+
+# Local experiment archives and transient compiler outputs.
+/历史实验代码快照/
+/研究记录/资料库/
+/operations/engineering_speed_lab/inductor_cache/
+/公开代码包说明.md
+/公开前筛选记录.txt

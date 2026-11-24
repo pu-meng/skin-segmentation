@@ -22,4 +22,25 @@ python reproducibility/a1_swiftformer/run.py model-check --cache /path/to/cache
 python reproducibility/a1_swiftformer/run.py train --cache /path/to/cache --output /path/to/new-run
 ```
 
-缓存和训练输出目录必须不存在，防止覆盖。缓存生成使用 Pillow 双线性缩放；如 SHA256 不一致，检查下载文件及 Pillow 版本，不要将其作为完全一致的复现。训练沿用原入口的 batch 8、300 epochs、AdamW、BCE+Dice、CosineAnnealingLR（T_max=50）和按验证损失选择最佳权重。GPU 前向、反向、300 轮和固定最佳权重测试尚未在此便携入口验证；脚本目前提供训练及验证，**尚未提供完整 none/mirror4 最终测试入口**。不同硬件或软件版本也不能保证逐位一致。
+缓存和训练输出目录必须不存在，防止覆盖。缓存生成使用 Pillow 双线性缩放；如 SHA256 不一致，检查下载文件及 Pillow 版本，不要将其作为完全一致的复现。训练沿用原入口的 batch 8、300 epochs、AdamW、BCE+Dice、CosineAnnealingLR（T_max=50）和按验证损失选择最佳权重。GPU 前向、反向、300 轮和固定最佳权重测试尚未在此便携入口验证；脚本目前提供训练及验证，最终 TTA4 测试通过独立的 evaluate.py 执行，见下节。不同硬件或软件版本也不能保证逐位一致。
+
+## 四数据集 TTA4 评估
+
+[环境版本](requirements-original.txt)记录原实验依赖。CUDA 扩展需使用与 PyTorch 2.3.0、CUDA 12.1 和 Linux x86-64 环境匹配的构建。本次检查使用原服务器现有环境，其中 NumPy 为 2.2.6。新机器的环境安装仍需验证。
+
+| 数据集 | 固定划分清单 | 训练／验证／测试 | 原训练入口 |
+| --- | --- | --- | --- |
+| HAM10000 | [split.csv](split.csv) | 6983／1010／2020 | [便携训练入口](run.py) |
+| ISIC2018 | [ISIC2018.csv](splits/ISIC2018.csv) | 1780／258／518 | [原实验入口](../../operations/isic_a1_encoder_20261108/run.py) |
+| PH² | [PH2.csv](splits/PH2.csv) | 140／20／40 | [原实验入口](../../operations/ph2_mambalite_compare_20261115/runner.py) |
+| ISIC2017 | [ISIC2017.csv](splits/ISIC2017.csv) | 1997／149／600 | [原实验入口](../../operations/isic2017_table1_20261116/runner.py) |
+
+四份清单均保留实际运行的图像 ID、集合归属和顺序。HAM10000、ISIC2018 同时保留缓存索引，PH²、ISIC2017 保留已经预处理的图像和掩膜 SHA256。[评估校验配置](evaluation.json)给出分割权重、划分和缓存的校验值以及原实验参考 Dice。
+
+~~~bash
+python reproducibility/a1_swiftformer/evaluate.py --dataset HAM10000 --inputs /path/to/cache --checkpoint /path/to/best.pth --output /path/to/new-test
+~~~
+
+--inputs 对 HAM10000 和 ISIC2018 指向 images.npy、masks.npy 所在目录，对 PH2 和 ISIC2017 指向含 images/、masks/ 的 256×256 PNG 目录。评估入口校验输入及划分，严格加载验证所选的 checkpoint，并输出 TTA4 掩膜、逐图指标和总计审计。四套原实验数据和权重已通过校验与 CPU 严格加载，镜像聚合已通过独立数值检查。完整 CUDA 推理尚未在便携入口重跑。
+
+ISIC2018、PH² 和 ISIC2017 的历史训练脚本仍使用原服务器数据入口和路径。要在新机器上从原始数据开始复现，还需要可移植的数据获取、预处理与训练命令。分割权重和图像、掩膜缓存由用户单独提供，仓库仅保存校验信息。

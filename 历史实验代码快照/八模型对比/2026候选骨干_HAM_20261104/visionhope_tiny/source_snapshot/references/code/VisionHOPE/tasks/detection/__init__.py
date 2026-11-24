@@ -1,1 +1,0 @@
-"""VisionHOPE tasks detection support."""

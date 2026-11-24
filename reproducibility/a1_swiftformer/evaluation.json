@@ -1,0 +1,71 @@
+{
+  "HAM10000": {
+    "split": "split.csv",
+    "split_sha256": "929260a60bebbcd8575c83fe6e8f60ca5db75cf8d4ca7f1555da249be7b7ac77",
+    "original_split_sha256": "0f5e2df296f50afb74002ce94438a5b7a17782deaef671f93673a60a8e8b5ed8",
+    "test_images": 2020,
+    "reference_epoch": 39,
+    "reference_checkpoint_sha256": "c9047aeb716ace5532ddc57ae57d4ef98c5cc7f8d9bb467799f24f8b99f47252",
+    "reference_global_dice": 0.9495008027165521,
+    "cache_files": {
+      "images.npy": {
+        "bytes": 1969029248,
+        "sha256": "0d89ea91e3870c3946812d819ee53e40854299ebec963050d9afe2a4f3d2529e",
+        "shape": [
+          10015,
+          256,
+          256,
+          3
+        ],
+        "dtype": "uint8"
+      },
+      "masks.npy": {
+        "bytes": 656343168,
+        "sha256": "11c586253a547b7c935c8887a95446214854718531553b367b8052314178d8a2",
+        "shape": [
+          10015,
+          256,
+          256
+        ],
+        "dtype": "uint8"
+      }
+    }
+  },
+  "ISIC2018": {
+    "split": "splits/ISIC2018.csv",
+    "split_sha256": "b3df7b6df67f7e3b97d6a782f5853359bd7ca45c00bb1c2315e1bfc7812cd992",
+    "original_split_sha256": "291dd0995639fa846fc057a8326ec52ad11c83bc167ec4fa1f31d28008e5fba1",
+    "test_images": 518,
+    "reference_epoch": 35,
+    "reference_checkpoint_sha256": "a0c5ea79378347d609672a90be8cd78e343f23dc4bd9832b2d269533cc190516",
+    "reference_global_dice": 0.9197682724838249,
+    "cache_files": {
+      "images.npy": {
+        "sha256": "102adb6b71ee84e84e3d128997583e76a51097d4a88cb6ec1cd22005a15c1768",
+        "bytes": 502530176
+      },
+      "masks.npy": {
+        "sha256": "6d5d5e1d73d85562cc7abb75af4374125644ff5820f736d7edade180bcf64f9c",
+        "bytes": 167510144
+      }
+    }
+  },
+  "PH2": {
+    "split": "splits/PH2.csv",
+    "split_sha256": "5afe07883c95f35de110bed9a11df0020bea36b9fc2bc563b62a13b622ea48c7",
+    "original_split_sha256": "ebcfb8b824fa236e376a844b77c3ea198996eb55e8700a94c27d36eb48030a9f",
+    "test_images": 40,
+    "reference_epoch": 288,
+    "reference_checkpoint_sha256": "6014dd1c035b997508bb94dc618d2ab8e101b72b6291191b6f14dd6d53d5f782",
+    "reference_global_dice": 0.9657235100741567
+  },
+  "ISIC2017": {
+    "split": "splits/ISIC2017.csv",
+    "split_sha256": "077007babbeb1f066a062713f74da9b9dbc1ed5b08aae4d3f14256f1f9f175df",
+    "original_split_sha256": "8dbe6591af3e51b1b0caf1c19591ed1b55afe6666e1b262ff1a886d3fe111131",
+    "test_images": 600,
+    "reference_epoch": 34,
+    "reference_checkpoint_sha256": "99ef1ca9c14be0f3ffaddf56ffefa91e3b3cfa1e07dca86bf78ed73cd3fd3ee3",
+    "reference_global_dice": 0.8641437307370294
+  }
+}
